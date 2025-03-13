@@ -8,4 +8,68 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-</Project>
+</Project
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Predefined user information
+        string name = "Ngonidzaishe";
+        string surname = "Chareka";
+        int age = 25;
+
+        // Greeting the user
+        Console.WriteLine($"Hello, {name} {surname}! You are {age} years old.");
+
+        // Additional functionality to check if the user is a minor or an adult
+        if (age < 18)
+        {
+            Console.WriteLine("You are a minor.");
+        }
+        else
+        {
+            Console.WriteLine("You are an adult.");
+        }
+
+        // Asking for the user's favorite color
+        Console.Write("What is your favorite color? ");
+        string color = Console.ReadLine();
+        Console.WriteLine($"{color} is a beautiful color!");
+
+        // Asking for the user's favorite hobby
+        Console.Write("What is your favorite hobby? ");
+        string hobby = Console.ReadLine();
+        Console.WriteLine($"That's great! {hobby} sounds like a lot of fun.");
+
+        // Asking for the user's favorite food
+        Console.Write("What is your favorite food? ");
+        string food = Console.ReadLine();
+        Console.WriteLine($"{food} is delicious!");
+
+        // Asking for the user's dream job
+        Console.Write("What is your dream job? ");
+        string job = Console.ReadLine();
+        Console.WriteLine($"Wow, being a {job} would be amazing!");
+
+        // Asking for the user's favorite movie
+        Console.Write("What is your favorite movie? ");
+        string movie = Console.ReadLine();
+        Console.WriteLine($"{movie} is a fantastic choice!");
+
+        // Summary of user input
+        Console.WriteLine("\n--- Summary of Your Information ---");
+        Console.WriteLine($"Name: {name} {surname}");
+        Console.WriteLine($"Age: {age}");
+        Console.WriteLine($"Favorite Color: {color}");
+        Console.WriteLine($"Favorite Hobby: {hobby}");
+        Console.WriteLine($"Favorite Food: {food}");
+        Console.WriteLine($"Dream Job: {job}");
+        Console.WriteLine($"Favorite Movie: {movie}");
+
+        // Farewell message
+        Console.WriteLine("\nThank you for sharing! Have a great day!");
+    }
+}
+
