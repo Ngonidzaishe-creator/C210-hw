@@ -9,7 +9,6 @@
   </PropertyGroup>
 
 </Project
-using System;
 
 class Program
 {

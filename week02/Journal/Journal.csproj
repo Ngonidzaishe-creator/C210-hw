@@ -9,8 +9,6 @@
   </PropertyGroup>
 
 </Project>
-using System;
-using System.Collections.Generic;
 
 
 namespace JournalApp
