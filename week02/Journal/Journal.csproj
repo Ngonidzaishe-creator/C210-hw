@@ -9,3 +9,110 @@
   </PropertyGroup>
 
 </Project>
+using System;
+using System.Collections.Generic;
+
+
+namespace JournalApp
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Journal journal = new Journal();
+            string filePath = "journal.txt";
+
+            // Load existing entries
+            journal.LoadFromFile(filePath);
+
+            // Add a new entry
+            Console.Write("What did you learn today? ");
+            string content = Console.ReadLine();
+            Entry entry = new Entry("What did you learn today?", content);
+            journal.AddEntry(entry);
+
+            // Display all entries
+            journal.DisplayEntries();
+
+            // Save entries to file
+            journal.SaveToFile(filePath);
+        }
+    }
+
+    public class Journal
+    {
+        public List<Entry> Entries { get; private set; }
+
+        public Journal()
+        {
+            Entries = new List<Entry>();
+        }
+
+        public void AddEntry(Entry entry)
+        {
+            Entries.Add(entry);
+        }
+
+        public void DisplayEntries()
+        {
+            foreach (var entry in Entries)
+            {
+                Console.WriteLine(entry);
+            }
+        }
+
+        public void SaveToFile(string filePath)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (var entry in Entries)
+                {
+                    writer.WriteLine(entry);
+                }
+            }
+        }
+
+        public void LoadFromFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        // Assuming the format is "Date: Prompt - Content"
+                        var parts = line.Split(" - ");
+                        var prompt = parts[0].Split(": ")[1]; // Extract prompt
+                        var content = parts[1]; // Extract content
+                        var entry = new Entry(prompt, content);
+                        AddEntry(entry);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No journal file found.");
+            }
+        }
+    }
+
+    public class Entry
+    {
+        public string Prompt { get; }
+        public string Content { get; }
+        public DateTime Date { get; }
+
+        public Entry(string prompt, string content)
+        {
+            Prompt = prompt;
+            Content = content;
+            Date = DateTime.Now;
+        }
+
+        public override string ToString()
+        {
+            return $"{Date}: {Prompt} - {Content}";
+        }
+    }
+}
