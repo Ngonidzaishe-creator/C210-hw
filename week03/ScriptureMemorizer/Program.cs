@@ -7,3 +7,113 @@ class Program
         Console.WriteLine("Hello World! This is the ScriptureMemorizer Project.");
     }
 }
+¬using System;
+using System.Collections.Generic;
+
+namespace MyScriptureProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Reference reference = new Reference("Matthew", "5", "1-16");
+            Scripture scripture = new Scripture(reference, "And seeing the multitudes, he went up into a mountain: and when he was set, his disciples came unto him: And he opened his mouth, and taught them, saying, Blessed are the poor in spirit: for theirs is the kingdom of heaven. Blessed are they that mourn: for they shall be comforted. Blessed are the meek: for they shall inherit the earth. Blessed are they which do hunger and thirst after righteousness: for they shall be filled. Blessed are the merciful: for they shall obtain mercy. Blessed are the pure in heart: for they shall see God. Blessed are the peacemakers: for they shall be called the children of God. Blessed are they which are persecuted for righteousness’ sake: for theirs is the kingdom of heaven. Ye are the salt of the earth: but if the salt have lost his savour, wherewith shall it be salted? it is thenceforth good for nothing, but to be cast out, and to be trodden under foot of men. Ye are the light of the world. A city that is set on an hill cannot be hid. Neither do men light a candle, and put it under a bushel, but on a candlestick; and it giveth light unto all that are in the house.");
+
+            while (true)
+            {
+                Console.Clear();
+                scripture.Display();
+                Console.WriteLine("Press Enter to hide a word, or type 'quit' to exit");
+                string input = Console.ReadLine();
+                if (input.ToLower() == "quit")
+                {
+                    break;
+                }
+                scripture.HideRandomWords();
+            }
+        }
+    }
+
+    public class Reference
+    {
+        public string Book { get; set; }
+        public string Chapter { get; set; }
+        public string Verse { get; set; }
+
+        public Reference(string book, string chapter, string verse)
+        {
+            Book = book;
+            Chapter = chapter;
+            Verse = verse;
+        }
+
+        public string GetDisplayText()
+        {
+            return $"{Book} {Chapter}:{Verse}";
+        }
+    }
+
+    public class Word
+    {
+        public string Text { get; set; }
+        public bool IsHidden { get; set; }
+
+        public Word(string text)
+        {
+            Text = text;
+            IsHidden = false;
+        }
+
+        public void Hide()
+        {
+            IsHidden = true;
+        }
+
+        public string GetDisplayText()
+        {
+            if (IsHidden)
+            {
+                return new string('_', Text.Length);
+            }
+            else
+            {
+                return Text;
+            }
+        }
+    }
+
+    public class Scripture
+    {
+        public Reference Reference { get; set; }
+        public List<Word> Words { get; set; }
+
+        public Scripture(Reference reference, string text)
+        {
+            Reference = reference;
+            Words = new List<Word>();
+
+            string[] words = text.Split(' ');
+            foreach (string word in words)
+            {
+                Words.Add(new Word(word));
+            }
+        }
+
+        public void HideRandomWords()
+        {
+            Random random = new Random();
+            int index = random.Next(Words.Count);
+            Words[index].Hide();
+        }
+
+        public void Display()
+        {
+            Console.WriteLine(Reference.GetDisplayText());
+            foreach (Word word in Words)
+            {
+                Console.Write(word.GetDisplayText() + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
