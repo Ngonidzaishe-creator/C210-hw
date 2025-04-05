@@ -6,4 +6,141 @@ class Program
     {
         Console.WriteLine("Hello World! This is the Mindfulness Project.");
     }
-}
+}using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace MindfulnessProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MindfulnessApp app = new MindfulnessApp();
+            app.Start();
+        }
+    }
+
+    public class MindfulnessApp
+    {
+        private List<Activity> activities;
+
+        public MindfulnessApp()
+        {
+            activities = new List<Activity>
+            {
+                new BreathingActivity(),
+                new ReflectionActivity(),
+                new ListingActivity()
+            };
+        }
+
+        public void Start()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Welcome to the Mindfulness Program!");
+                Console.WriteLine("Please choose an activity:");
+                for (int i = 0; i < activities.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {activities[i].GetName()}");
+                }
+                Console.WriteLine("4. Exit");
+
+                int choice = GetUserChoice(1, 4);
+                if (choice == 4) break;
+
+                Activity selectedActivity = activities[choice - 1];
+                selectedActivity.StartActivity();
+            }
+        }
+
+        private int GetUserChoice(int min, int max)
+        {
+            int choice;
+            while (!int.TryParse(Console.ReadLine(), out choice) || choice < min || choice > max)
+            {
+                Console.WriteLine($"Please enter a number between {min} and {max}:");
+            }
+            return choice;
+        }
+    }
+
+    public abstract class Activity
+    {
+        protected int duration;
+
+        public abstract string GetName();
+        public abstract string GetDescription();
+
+        public void StartActivity()
+        {
+            Console.Clear();
+            Console.WriteLine(GetName());
+            Console.WriteLine(GetDescription());
+            Console.Write("Enter the duration in seconds: ");
+            duration = int.Parse(Console.ReadLine());
+            Console.WriteLine("Get ready...");
+            Pause(3);
+
+            ExecuteActivity();
+
+            Console.WriteLine("Good job! You completed the activity.");
+            Console.WriteLine($"Duration: {duration} seconds.");
+            Pause(3);
+        }
+
+        protected void Pause(int seconds)
+        {
+            for (int i = seconds; i > 0; i--)
+            {
+                Console.Write($"\rPausing for {i} seconds... ");
+                Thread.Sleep(1000);
+            }
+            Console.WriteLine();
+        }
+
+        protected void ShowSpinner(int seconds)
+        {
+            for (int i = 0; i < seconds; i++)
+            {
+                Console.Write("/-\\|".ToCharArray()[i % 4]);
+                Thread.Sleep(250);
+                Console.Write("\b");
+            }
+        }
+
+        protected void Countdown(int seconds)
+        {
+            for (int i = seconds; i > 0; i--)
+            {
+                Console.Write($"\rCountdown: {i} ");
+                Thread.Sleep(1000);
+            }
+            Console.WriteLine();
+        }
+
+        protected void WaitForInput()
+        {
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+        }
+
+        protected void DisplayMessage(string message, int pauseTime)
+        {
+            Console.WriteLine(message);
+            Countdown(pauseTime);
+        }
+
+        protected void Breathe(string direction, int pauseTime)
+        {
+            Console.WriteLine(direction);
+            Countdown(pauseTime);
+        }
+    }
+
+    public class BreathingActivity : Activity
+    {
+        public override string GetName() => "Breathing Activity";
+        public override string GetDescription
