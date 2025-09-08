@@ -1,15 +1,8 @@
 using System;
 
-class Program
+internal class Program
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello World! This is the Exercise5 Project.");
-    }
-}
-class Program
-{
-    static void Main()
+    private static void Main()
     {
         while (true)
         {
@@ -52,7 +45,7 @@ class Program
         }
     }
 
-    static void CalculateSquareAndCube()
+    private static void CalculateSquareAndCube()
     {
         Console.Write("Enter a number to calculate its square and cube: ");
         if (int.TryParse(Console.ReadLine(), out int number))
@@ -68,7 +61,7 @@ class Program
         }
     }
 
-    static void CalculateFactorial()
+    private static void CalculateFactorial()
     {
         Console.Write("Enter a number to calculate its factorial: ");
         if (int.TryParse(Console.ReadLine(), out int factorialInput))
@@ -89,7 +82,7 @@ class Program
         }
     }
 
-    static void CalculateSumOfSquares()
+    private static void CalculateSumOfSquares()
     {
         Console.Write("Enter the number of terms for sum of squares: ");
         if (int.TryParse(Console.ReadLine(), out int terms) && terms > 0)
@@ -107,7 +100,7 @@ class Program
         }
     }
 
-    static void CalculateProductOfNumbers()
+    private static void CalculateProductOfNumbers()
     {
         Console.Write("Enter the number of terms for product calculation: ");
         if (int.TryParse(Console.ReadLine(), out int terms) && terms > 0)
@@ -125,17 +118,17 @@ class Program
         }
     }
 
-    static int Square(int num)
+    private static int Square(int num)
     {
         return num * num;
     }
 
-    static int Cube(int num)
+    private static int Cube(int num)
     {
         return num * num * num;
     }
 
-    static long Factorial(int num)
+    private static long Factorial(int num)
     {
         if (num == 0) return 1;
         long result = 1;

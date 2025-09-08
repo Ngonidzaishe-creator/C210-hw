@@ -1,8 +1,8 @@
 using System;
 
-class Program
+internal class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         Console.WriteLine("Hello World! This is the ExerciseTracking Project.");
     }
@@ -105,9 +105,9 @@ public class Swimming : Activity
     }
 }
 
-class Program
+internal class Program
 {
-    static void Main()
+    private static void Main()
     {
         List<Activity> activities = new List<Activity>
         {
