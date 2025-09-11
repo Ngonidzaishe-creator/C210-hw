@@ -1,145 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace JournalApp
+public class Journal
 {
-    public class Program
+    private List<Entry> _entries = new List<Entry>();
+
+    // Add a new entry to the journal
+    public void AddEntry(string prompt, string response)
     {
-        public static void Main(string[] args)
+        string date = DateTime.Now.ToShortDateString();
+        Entry newEntry = new Entry(date, prompt, response);
+        _entries.Add(newEntry);
+    }
+
+    // Display all entries
+    public void DisplayAll()
+    {
+        if (_entries.Count == 0)
         {
-            Journal journal = new Journal();
-            string filePath = "journal.txt";
-
-            // Load existing entries
-            journal.LoadFromFile(filePath);
-
-            while (true)
-            {
-                Console.WriteLine("Welcome to the Journal App!");
-                Console.WriteLine("1. Add a new entry");
-                Console.WriteLine("2. Display all entries");
-                Console.WriteLine("3. Save entries to file");
-                Console.WriteLine("4. Exit");
-                Console.Write("Please choose an option: ");
-
-                string choice = Console.ReadLine();
-                switch (choice)
-                {
-                    case "1":
-                        AddNewEntry(journal);
-                        break;
-                    case "2":
-                        journal.DisplayEntries();
-                        break;
-                    case "3":
-                        journal.SaveToFile(filePath);
-                        Console.WriteLine("Entries saved successfully.");
-                        break;
-                    case "4":
-                        Console.WriteLine("Exiting the application. Goodbye!");
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        break;
-                }
-            }
+            Console.WriteLine("Your journal is empty.");
+            return;
         }
 
-        private static void AddNewEntry(Journal journal)
+        foreach (Entry entry in _entries)
         {
-            Console.Write("What did you learn today? ");
-            string content = Console.ReadLine();
-            Entry entry = new Entry("What did you learn today?", content);
-            journal.AddEntry(entry);
-            Console.WriteLine("Entry added successfully.");
+            Console.WriteLine(entry.ToString());
         }
     }
 
-    public class Journal
+    // Save journal to a file
+    public void SaveToFile(string filename)
     {
-        public List<Entry> Entries { get; private set; }
-
-        public Journal()
+        using (StreamWriter outputFile = new StreamWriter(filename))
         {
-            Entries = new List<Entry>();
-        }
-
-        public void AddEntry(Entry entry)
-        {
-            Entries.Add(entry);
-        }
-
-        public void DisplayEntries()
-        {
-            if (Entries.Count == 0)
+            foreach (Entry entry in _entries)
             {
-                Console.WriteLine("No entries found.");
-                return;
-            }
-
-            Console.WriteLine("Journal Entries:");
-            foreach (var entry in Entries)
-            {
-                Console.WriteLine(entry);
+                outputFile.WriteLine($"{entry._date}~|~{entry._prompt}~|~{entry._response}");
             }
         }
-
-        public void SaveToFile(string filePath)
-        {
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                foreach (var entry in Entries)
-                {
-                    writer.WriteLine(entry);
-                }
-            }
-        }
-
-        public void LoadFromFile(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        // Assuming the format is "Date: Prompt - Content"
-                        var parts = line.Split(" - ");
-                        if (parts.Length == 2)
-                        {
-                            var prompt = parts[0].Split(": ")[1]; // Extract prompt
-                            var content = parts[1]; // Extract content
-                            var entry = new Entry(prompt, content);
-                            AddEntry(entry);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("No journal file found. Starting a new journal.");
-            }
-        }
+        Console.WriteLine("Journal saved successfully.");
     }
 
-    public class Entry
+    // Load journal from a file
+    public void LoadFromFile(string filename)
     {
-        public string Prompt { get; }
-        public string Content { get; }
-        public DateTime Date { get; }
-
-        public Entry(string prompt, string content)
+        if (!File.Exists(filename))
         {
-            Prompt = prompt;
-            Content = content;
-            Date = DateTime.Now;
+            Console.WriteLine("File not found.");
+            return;
         }
 
-        public override string ToString()
+        _entries.Clear();
+        string[] lines = File.ReadAllLines(filename);
+
+        foreach (string line in lines)
         {
-            return $"{Date:yyyy-MM-dd HH:mm:ss}: {Prompt} - {Content}";
+            string[] parts = line.Split("~|~");
+            if (parts.Length == 3)
+            {
+                _entries.Add(new Entry(parts[0], parts[1], parts[2]));
+            }
         }
+
+        Console.WriteLine("Journal loaded successfully.");
     }
 }
