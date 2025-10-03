@@ -1,119 +1,156 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello World! This is the ScriptureMemorizer Project.");
-    }
-}
-¬using System;
-using System.Collections.Generic;
-
-namespace MyScriptureProgram
-{
-    class Program
-    {
-        static void Main(string[] args)
+        // Creativity: multiple scriptures stored in a list
+        List<Scripture> scriptures = new List<Scripture>()
         {
-            Reference reference = new Reference("Matthew", "5", "1-16");
-            Scripture scripture = new Scripture(reference, "And seeing the multitudes, he went up into a mountain: and when he was set, his disciples came unto him: And he opened his mouth, and taught them, saying, Blessed are the poor in spirit: for theirs is the kingdom of heaven. Blessed are they that mourn: for they shall be comforted. Blessed are the meek: for they shall inherit the earth. Blessed are they which do hunger and thirst after righteousness: for they shall be filled. Blessed are the merciful: for they shall obtain mercy. Blessed are the pure in heart: for they shall see God. Blessed are the peacemakers: for they shall be called the children of God. Blessed are they which are persecuted for righteousness’ sake: for theirs is the kingdom of heaven. Ye are the salt of the earth: but if the salt have lost his savour, wherewith shall it be salted? it is thenceforth good for nothing, but to be cast out, and to be trodden under foot of men. Ye are the light of the world. A city that is set on an hill cannot be hid. Neither do men light a candle, and put it under a bushel, but on a candlestick; and it giveth light unto all that are in the house.");
+            new Scripture(new Reference("John", 3, 16), "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life."),
+            new Scripture(new Reference("Proverbs", 3, 5, 6), "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.")
+        };
 
-            while (true)
+        Random rnd = new Random();
+        Scripture selectedScripture = scriptures[rnd.Next(scriptures.Count)];
+
+        bool running = true;
+
+        while (running)
+        {
+            Console.Clear();
+            selectedScripture.Display();
+
+            if (selectedScripture.AllHidden())
             {
-                Console.Clear();
-                scripture.Display();
-                Console.WriteLine("Press Enter to hide a word, or type 'quit' to exit");
-                string input = Console.ReadLine();
-                if (input.ToLower() == "quit")
-                {
-                    break;
-                }
-                scripture.HideRandomWords();
+                Console.WriteLine("All words are hidden. Great job memorizing!");
+                break;
             }
-        }
-    }
 
-    public class Reference
-    {
-        public string Book { get; set; }
-        public string Chapter { get; set; }
-        public string Verse { get; set; }
-
-        public Reference(string book, string chapter, string verse)
-        {
-            Book = book;
-            Chapter = chapter;
-            Verse = verse;
-        }
-
-        public string GetDisplayText()
-        {
-            return $"{Book} {Chapter}:{Verse}";
-        }
-    }
-
-    public class Word
-    {
-        public string Text { get; set; }
-        public bool IsHidden { get; set; }
-
-        public Word(string text)
-        {
-            Text = text;
-            IsHidden = false;
-        }
-
-        public void Hide()
-        {
-            IsHidden = true;
-        }
-
-        public string GetDisplayText()
-        {
-            if (IsHidden)
+            Console.WriteLine("Press ENTER to hide words or type 'quit' to exit:");
+            string input = Console.ReadLine();
+            if (input.ToLower() == "quit")
             {
-                return new string('_', Text.Length);
+                running = false;
             }
             else
             {
-                return Text;
+                selectedScripture.HideRandomWords();
             }
         }
     }
+}
 
-    public class Scripture
+public class Scripture
+{
+    private Reference _reference;
+    private List<Word> _words;
+    private Random _random;
+
+    public Scripture(Reference reference, string text)
     {
-        public Reference Reference { get; set; }
-        public List<Word> Words { get; set; }
+        _reference = reference;
+        _words = new List<Word>();
+        _random = new Random();
 
-        public Scripture(Reference reference, string text)
+        foreach (var word in text.Split(' '))
         {
-            Reference = reference;
-            Words = new List<Word>();
-
-            string[] words = text.Split(' ');
-            foreach (string word in words)
-            {
-                Words.Add(new Word(word));
-            }
+            _words.Add(new Word(word));
         }
+    }
 
-        public void HideRandomWords()
+    public void Display()
+    {
+        Console.WriteLine(_reference.ToString());
+        foreach (var word in _words)
         {
-            Random random = new Random();
-            int index = random.Next(Words.Count);
-            Words[index].Hide();
+            Console.Write(word.Display() + " ");
         }
+        Console.WriteLine("\n");
+    }
 
-        public void Display()
+    // Hide a few random words that are not yet hidden
+    public void HideRandomWords(int count = 3)
+    {
+        var notHidden = _words.Where(w => !w.IsHidden).ToList();
+
+        if (notHidden.Count == 0)
+            return;
+
+        for (int i = 0; i < count; i++)
         {
-            Console.WriteLine(Reference.GetDisplayText());
-            foreach (Word word in Words)
-            {
-                Console.Write(word.GetDisplayText() + " ");
-            }
-            Console.WriteLine();
+            if (notHidden.Count == 0)
+                break;
+
+            var wordToHide = notHidden[_random.Next(notHidden.Count)];
+            wordToHide.Hide();
+            notHidden.Remove(wordToHide);
         }
+    }
+
+    public bool AllHidden()
+    {
+        return _words.All(w => w.IsHidden);
+    }
+}
+
+public class Reference
+{
+    public string Book { get; private set; }
+    public int StartVerse { get; private set; }
+    public int? EndVerse { get; private set; }
+
+    // Single verse constructor
+    public Reference(string book, int verse)
+    {
+        Book = book;
+        StartVerse = verse;
+        EndVerse = null;
+    }
+
+    // Verse range constructor
+    public Reference(string book, int startVerse, int endVerse)
+    {
+        Book = book;
+        StartVerse = startVerse;
+        EndVerse = endVerse;
+    }
+
+    public override string ToString()
+    {
+        if (EndVerse.HasValue)
+            return $"{Book} {StartVerse}-{EndVerse}";
+        else
+            return $"{Book} {StartVerse}";
+    }
+}
+public class Word
+{
+    private string _text;
+    private bool _isHidden;
+
+    public Word(string text)
+    {
+        _text = text;
+        _isHidden = false;
+    }
+
+    public bool IsHidden => _isHidden;
+
+    public string Display()
+    {
+        return _isHidden ? new string('_', _text.Length) : _text;
+    }
+
+    public void Hide()
+    {
+        _isHidden = true;
+    }
+
+    public void Show()
+    {
+        _isHidden = false;
     }
 }
