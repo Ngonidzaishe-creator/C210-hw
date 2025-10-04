@@ -1,89 +1,82 @@
 using System;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello World! This is the YouTubeVideos Project.");
-    }
-}using System;
 using System.Collections.Generic;
-
-public class Comment
-{
-    public string CommenterName { get; set; }
-    public string Text { get; set; }
-
-    public Comment(string commenterName, string text)
-    {
-        CommenterName = commenterName;
-        Text = text;
-    }
-}
 
 public class Video
 {
-    public string Title { get; set; }
-    public string Author { get; set; }
-    public int LengthInSeconds { get; set; }
-    private List<Comment> comments;
+    private string _title;
+    private string _author;
+    private int _length;
+    private List<Comment> _comments;
 
-    public Video(string title, string author, int lengthInSeconds)
+    public Video(string title, string author, int length)
     {
-        Title = title;
-        Author = author;
-        LengthInSeconds = lengthInSeconds;
-        comments = new List<Comment>();
+        _title = title;
+        _author = author;
+        _length = length;
+        _comments = new List<Comment>();
     }
 
     public void AddComment(Comment comment)
     {
-        comments.Add(comment);
+        _comments.Add(comment);
     }
 
     public int GetNumberOfComments()
     {
-        return comments.Count;
+        return _comments.Count;
     }
 
-    public List<Comment> GetComments()
+    public void DisplayVideoInfo()
     {
-        return comments;
+        Console.WriteLine($"Title: {_title}");
+        Console.WriteLine($"Author: {_author}");
+        Console.WriteLine($"Length: {_length} seconds");
+        Console.WriteLine($"Number of Comments: {GetNumberOfComments()}");
+        Console.WriteLine("Comments:");
+        foreach (Comment comment in _comments)
+        {
+            Console.WriteLine($" - {comment.GetCommenterName()}: {comment.GetCommentText()}");
+        }
+        Console.WriteLine();
     }
 }
-
-public class Program
+public class Comment
 {
-    public static void Main(string[] args)
+    private string _name;
+    private string _text;
+
+    public Comment(string name, string text)
     {
-        // Create video instances
-        Video video1 = new Video("Learning C#", "President Thomas S. Monson", 300);
-        video1.AddComment(new Comment("President Thomas S. Monson", "Be Strong and of a Good Courage"));
-        
-        Video video2 = new Video("Understanding Polymorphism", "Jane Smith", 450);
-        video2.AddComment(new Comment("Charlie", "This clarified a lot for me."));
-        video2.AddComment(new Comment("David", "Awesome explanation!"));
-        
-        Video video3 = new Video("Introduction to Data Structures", "Emily Johnson", 600);
-        video3.AddComment(new Comment("Eve", "I love this content!"));
-        video3.AddComment(new Comment("Frank", "Can you make a follow-up video?"));
+        _name = name;
+        _text = text;
+    }
 
-        // Add videos to a list
-        List<Video> videos = new List<Video> { video1, video2, video3 };
+    public string GetCommenterName()
+    {
+        return _name;
+    }
 
-        // Display video details
-        foreach (Video video in videos)
-        {
-            Console.WriteLine($"Title: {video.Title}");
-            Console.WriteLine($"Author: {video.Author}");
-            Console.WriteLine($"Length: {video.LengthInSeconds} seconds");
-            Console.WriteLine($"Number of Comments: {video.GetNumberOfComments()}");
-            Console.WriteLine("Comments:");
-            foreach (Comment comment in video.GetComments())
-            {
-                Console.WriteLine($"- {comment.CommenterName}: {comment.Text}");
-            }
-            Console.WriteLine();
-        }
+    public string GetCommentText()
+    {
+        return _text;
+    }
+}
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        // Create some videos
+        Video video1 = new Video("C# Tutorial", "John Doe", 600);
+        video1.AddComment(new Comment("Alice", "Great tutorial!"));
+        video1.AddComment(new Comment("Bob", "Very helpful, thanks!"));
+
+        Video video2 = new Video("Learn Python", "Jane Smith", 800);
+        video2.AddComment(new Comment("Charlie", "I love Python!"));
+        video2.AddComment(new Comment("Dave", "This was a bit fast-paced."));
+        video2.AddComment(new Comment("Eve", "Can you make a follow-up video?"));
+
+        // Display video information
+        video1.DisplayVideoInfo();
+        video2.DisplayVideoInfo();
     }
 }
