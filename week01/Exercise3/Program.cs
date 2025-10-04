@@ -2,36 +2,44 @@ using System;
 
 class Program
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello World! This is the Exercise3 Project.");
-    }
-}
-class Program
-{
     static void Main()
     {
-        Console.Write("Enter a positive number: ");
-        int number = int.Parse(Console.ReadLine());
+        string playAgain = "yes";
 
-        Console.WriteLine("Counting up to your number:");
-        for (int i = 1; i <= number; i++)
+        while (playAgain.ToLower() == "yes")
         {
-            Console.WriteLine(i);
+            Random randomGenerator = new Random();
+            int magicNumber = randomGenerator.Next(1, 101);
+            int guess = -1;
+            int attempts = 0;
+
+            Console.WriteLine("I have chosen a number between 1 and 100. Try to guess it!");
+
+            while (guess != magicNumber)
+            {
+                Console.Write("What is your guess? ");
+                guess = int.Parse(Console.ReadLine());
+                attempts++;
+
+                if (guess < magicNumber)
+                {
+                    Console.WriteLine("Higher");
+                }
+                else if (guess > magicNumber)
+                {
+                    Console.WriteLine("Lower");
+                }
+                else
+                {
+                    Console.WriteLine($"You guessed it! It took you {attempts} guesses.");
+                }
+            }
+
+            Console.Write("Do you want to play again? (yes/no): ");
+            playAgain = Console.ReadLine();
+            Console.WriteLine();
         }
 
-        Console.WriteLine("Now counting down:");
-        for (int i = number; i >= 1; i--)
-        {
-            Console.WriteLine(i);
-        }
-
-        // Sum of all numbers from 1 to the entered number
-        int sum = 0;
-        for (int i = 1; i <= number; i++)
-        {
-            sum += i;
-        }
-        Console.WriteLine($"The sum of numbers from 1 to {number} is {sum}.");
+        Console.WriteLine("Thanks for playing!");
     }
 }

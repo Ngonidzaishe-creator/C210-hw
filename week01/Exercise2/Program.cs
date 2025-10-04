@@ -2,48 +2,54 @@ using System;
 
 class Program
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello World! This is the Exercise2 Project.");
-    }
-}
-
-class Program
-{
     static void Main()
     {
-        Console.Write("Enter your score (0-100): ");
-        int score = int.Parse(Console.ReadLine());
+        Console.Write("Enter your grade percentage: ");
+        int grade = int.Parse(Console.ReadLine());
 
-        if (score >= 90)
+        string letter = "";
+        string sign = "";
+
+        if (grade >= 90)
         {
-            Console.WriteLine("You received an A!");
+            letter = "A";
         }
-        else if (score >= 80)
+        else if (grade >= 80)
         {
-            Console.WriteLine("You received a B!");
+            letter = "B";
         }
-        else if (score >= 70)
+        else if (grade >= 70)
         {
-            Console.WriteLine("You received a C!");
+            letter = "C";
         }
-        else if (score >= 60)
+        else if (grade >= 60)
         {
-            Console.WriteLine("You received a D!");
+            letter = "D";
         }
         else
         {
-            Console.WriteLine("You received an F.");
+            letter = "F";
         }
 
-        // Additional feedback
-        if (score >= 60)
+        // Determine + or - sign
+        int lastDigit = grade % 10;
+        if (letter != "A" && letter != "F")
         {
-            Console.WriteLine("Congratulations! You passed.");
+            if (lastDigit >= 7)
+                sign = "+";
+            else if (lastDigit < 3)
+                sign = "-";
         }
+        else if (letter == "A" && lastDigit < 3)
+        {
+            sign = "-";
+        }
+
+        Console.WriteLine($"Your letter grade is: {letter}{sign}");
+
+        if (grade >= 70)
+            Console.WriteLine("Congratulations! You passed!");
         else
-        {
-            Console.WriteLine("Don't worry, you can try again!");
-        }
+            Console.WriteLine("Keep trying! You'll do better next time.");
     }
 }

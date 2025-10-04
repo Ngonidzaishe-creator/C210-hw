@@ -1,141 +1,40 @@
 using System;
 
-internal class Program
+class Program
 {
-    private static void Main()
+    static void DisplayWelcome()
     {
-        while (true)
-        {
-            Console.WriteLine("\n--- Number Calculation Menu ---");
-            Console.WriteLine("1. Calculate Square and Cube");
-            Console.WriteLine("2. Calculate Factorial");
-            Console.WriteLine("3. Calculate Sum of Squares");
-            Console.WriteLine("4. Calculate Product of Numbers");
-            Console.WriteLine("5. Exit");
-            Console.Write("Choose an option (1-5): ");
-
-            if (int.TryParse(Console.ReadLine(), out int choice))
-            {
-                switch (choice)
-                {
-                    case 1:
-                        CalculateSquareAndCube();
-                        break;
-                    case 2:
-                        CalculateFactorial();
-                        break;
-                    case 3:
-                        CalculateSumOfSquares();
-                        break;
-                    case 4:
-                        CalculateProductOfNumbers();
-                        break;
-                    case 5:
-                        Console.WriteLine("Exiting the program. Goodbye!");
-                        return;
-                    default:
-                        Console.WriteLine("Invalid choice. Please select a valid option.");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
-            }
-        }
+        Console.WriteLine("Welcome to the Program!");
     }
 
-    private static void CalculateSquareAndCube()
+    static string PromptUserName()
     {
-        Console.Write("Enter a number to calculate its square and cube: ");
-        if (int.TryParse(Console.ReadLine(), out int number))
-        {
-            int square = Square(number);
-            int cube = Cube(number);
-            Console.WriteLine($"The square of {number} is {square}.");
-            Console.WriteLine($"The cube of {number} is {cube}.");
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter a valid integer.");
-        }
+        Console.Write("Please enter your name: ");
+        return Console.ReadLine();
     }
 
-    private static void CalculateFactorial()
+    static int PromptUserNumber()
     {
-        Console.Write("Enter a number to calculate its factorial: ");
-        if (int.TryParse(Console.ReadLine(), out int factorialInput))
-        {
-            if (factorialInput < 0)
-            {
-                Console.WriteLine("Factorial is not defined for negative numbers.");
-            }
-            else
-            {
-                long factorialResult = Factorial(factorialInput);
-                Console.WriteLine($"The factorial of {factorialInput} is {factorialResult}.");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter a valid integer.");
-        }
+        Console.Write("Please enter your favorite number: ");
+        return int.Parse(Console.ReadLine());
     }
 
-    private static void CalculateSumOfSquares()
+    static int SquareNumber(int number)
     {
-        Console.Write("Enter the number of terms for sum of squares: ");
-        if (int.TryParse(Console.ReadLine(), out int terms) && terms > 0)
-        {
-            long sum = 0;
-            for (int i = 1; i <= terms; i++)
-            {
-                sum += Square(i);
-            }
-            Console.WriteLine($"The sum of squares of the first {terms} numbers is {sum}.");
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter a positive integer.");
-        }
+        return number * number;
     }
 
-    private static void CalculateProductOfNumbers()
+    static void DisplayResult(string name, int squared)
     {
-        Console.Write("Enter the number of terms for product calculation: ");
-        if (int.TryParse(Console.ReadLine(), out int terms) && terms > 0)
-        {
-            long product = 1;
-            for (int i = 1; i <= terms; i++)
-            {
-                product *= i;
-            }
-            Console.WriteLine($"The product of the first {terms} numbers is {product}.");
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter a positive integer.");
-        }
+        Console.WriteLine($"{name}, the square of your number is {squared}.");
     }
 
-    private static int Square(int num)
+    static void Main()
     {
-        return num * num;
-    }
-
-    private static int Cube(int num)
-    {
-        return num * num * num;
-    }
-
-    private static long Factorial(int num)
-    {
-        if (num == 0) return 1;
-        long result = 1;
-        for (int i = 1; i <= num; i++)
-        {
-            result *= i;
-        }
-        return result;
+        DisplayWelcome();
+        string userName = PromptUserName();
+        int number = PromptUserNumber();
+        int squared = SquareNumber(number);
+        DisplayResult(userName, squared);
     }
 }

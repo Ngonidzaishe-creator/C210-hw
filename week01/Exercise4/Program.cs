@@ -1,34 +1,44 @@
 using System;
-using System.Collections.Generic;
 
+internal class Program
+{
+    private static void Main();
 class Program
 {
     static void Main()
     {
-        List<string> fruits = new List<string>();
-        string input;
+        List<int> numbers = new List<int>();
+        int input = -1;
 
-        Console.WriteLine("Enter fruits (type 'done' to finish):");
-        while (true)
+        Console.WriteLine("Enter a list of numbers, type 0 when finished.");
+
+        while (input != 0)
         {
-            input = Console.ReadLine();
-            if (input.ToLower() == "done")
-                break;
-            fruits.Add(input);
+            Console.Write("Enter number: ");
+            input = int.Parse(Console.ReadLine());
+
+            if (input != 0)
+                numbers.Add(input);
         }
 
-        Console.WriteLine("You entered the following fruits:");
-        foreach (string fruit in fruits)
-        {
-            Console.WriteLine(fruit);
-        }
+        int sum = numbers.Sum();
+        double average = numbers.Average();
+        int max = numbers.Max();
 
-        // Additional functionality: Sorting the list
-        fruits.Sort();
-        Console.WriteLine("Fruits in alphabetical order:");
-        foreach (string fruit in fruits)
+        Console.WriteLine($"The sum is: {sum}");
+        Console.WriteLine($"The average is: {average}");
+        Console.WriteLine($"The largest number is: {max}");
+
+        // Stretch 1: Find smallest positive number
+        int smallestPositive = numbers.Where(n => n > 0).DefaultIfEmpty().Min();
+        Console.WriteLine($"The smallest positive number is: {smallestPositive}");
+
+        // Stretch 2: Sort and display list
+        numbers.Sort();
+        Console.WriteLine("The sorted list is:");
+        foreach (int number in numbers)
         {
-            Console.WriteLine(fruit);
+            Console.WriteLine(number);
         }
     }
 }
