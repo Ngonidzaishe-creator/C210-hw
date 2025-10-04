@@ -1,8 +1,7 @@
 using System;
 
 internal class Program
-{
-    private static void Main();
+{}
 class Program
 {
     static void Main()
