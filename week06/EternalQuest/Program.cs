@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 class Program
 {
@@ -7,10 +9,6 @@ class Program
         Console.WriteLine("Hello World! This is the EternalQuest Project.");
     }
 }
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 public abstract class Goal
 {
     public string Name { get; set; }
