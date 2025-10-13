@@ -1,122 +1,136 @@
 using System;
-
-internal class Program
-{
-    private static void Main(string[] args)
-    {
-        Console.WriteLine("Hello World! This is the ExerciseTracking Project.");
-    }
-}
-
+using System.Collections.Generic;
 
 public abstract class Activity
 {
-    public string Date { get; set; }
-    public int Minutes { get; set; }
+    // Encapsulation: Private member variables
+    private DateTime _date;
+    private int _lengthInMinutes;
 
-    public Activity(string date, int minutes)
+    // Constructor
+    protected Activity(DateTime date, int lengthInMinutes)
     {
-        Date = date;
-        Minutes = minutes;
+        _date = date;
+        _lengthInMinutes = lengthInMinutes;
     }
 
-    public abstract double GetDistance();
-    public abstract double GetSpeed();
-    public abstract double GetPace();
+    // Getters
+    public DateTime GetDate()
+    {
+        return _date;
+    }
 
+    public int GetLengthInMinutes()
+    {
+        return _lengthInMinutes;
+    }
+
+    // Abstract methods for polymorphism (must be overridden)
+    public abstract double GetDistance(); // in km
+    public abstract double GetSpeed();    // in kph
+    public abstract double GetPace();     // minutes per km
+
+    // Virtual method: available to all derived classes
     public virtual string GetSummary()
     {
-        return $"{Date} ({Minutes} min) - Distance: {GetDistance():F2} km, Speed: {GetSpeed():F2} kph, Pace: {GetPace():F2} min/km";
+        return $"{_date:dd MMM yyyy} {GetType().Name} ({_lengthInMinutes} min) - " +
+               $"Distance: {GetDistance():0.0} km, Speed: {GetSpeed():0.0} kph, Pace: {GetPace():0.00} min per km";
     }
 }
 
 public class Running : Activity
 {
-    public double DistanceInKm { get; set; }
+    private double _distance; // in km
 
-    public Running(string date, int minutes, double distanceInKm) : base(date, minutes)
+    public Running(DateTime date, int lengthInMinutes, double distance)
+        : base(date, lengthInMinutes)
     {
-        DistanceInKm = distanceInKm;
+        _distance = distance;
     }
 
     public override double GetDistance()
     {
-        return DistanceInKm;
+        return _distance;
     }
 
     public override double GetSpeed()
     {
-        return (DistanceInKm / Minutes) * 60;
+        return (_distance / GetLengthInMinutes()) * 60;
     }
 
     public override double GetPace()
     {
-        return Minutes / DistanceInKm;
+        return GetLengthInMinutes() / _distance;
     }
 }
 
 public class Cycling : Activity
 {
-    public double SpeedInKph { get; set; }
+    private double _speed; // in kph
 
-    public Cycling(string date, int minutes, double speedInKph) : base(date, minutes)
+    public Cycling(DateTime date, int lengthInMinutes, double speed)
+        : base(date, lengthInMinutes)
     {
-        SpeedInKph = speedInKph;
+        _speed = speed;
     }
 
     public override double GetDistance()
     {
-        return (SpeedInKph / 60) * Minutes;
+        return (_speed * GetLengthInMinutes()) / 60;
     }
 
     public override double GetSpeed()
     {
-        return SpeedInKph;
+        return _speed;
     }
 
     public override double GetPace()
     {
-        return 60 / SpeedInKph;
+        return 60 / _speed;
     }
 }
 
 public class Swimming : Activity
 {
-    public int Laps { get; set; }
+    private int _laps;
 
-    public Swimming(string date, int minutes, int laps) : base(date, minutes)
+    public Swimming(DateTime date, int lengthInMinutes, int laps)
+        : base(date, lengthInMinutes)
     {
-        Laps = laps;
+        _laps = laps;
     }
 
     public override double GetDistance()
     {
-        return Laps * 50 / 1000.0;
+        // Each lap = 50 meters, convert to km
+        return _laps * 50 / 1000.0;
     }
 
     public override double GetSpeed()
     {
-        return (GetDistance() / Minutes) * 60;
+        return (GetDistance() / GetLengthInMinutes()) * 60;
     }
 
     public override double GetPace()
     {
-        return Minutes / GetDistance();
+        return GetLengthInMinutes() / GetDistance();
     }
 }
 
-internal class Program
+class Program
 {
-    private static void Main()
+    static void Main(string[] args)
     {
-        List<Activity> activities = new List<Activity>
-        {
-            new Running("03 Nov 2022", 30, 3.0 * 1.60934), // convert miles to km
-            new Cycling("04 Nov 2022", 30, 20),
-            new Swimming("05 Nov 2022", 30, 20)
-        };
+        // Create instances of each activity type
+        Running run = new Running(new DateTime(2022, 11, 3), 30, 4.8);
+        Cycling cycle = new Cycling(new DateTime(2022, 11, 3), 40, 20);
+        Swimming swim = new Swimming(new DateTime(2022, 11, 3), 25, 30);
 
-        foreach (var activity in activities)
+        // Store all in one list (Polymorphism in action)
+        List<Activity> activities = new List<Activity> { run, cycle, swim };
+
+        // Display each summary
+        foreach (Activity activity in activities)
         {
             Console.WriteLine(activity.GetSummary());
         }
