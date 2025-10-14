@@ -76,7 +76,7 @@ internal class Program
         video2.AddComment(new Comment("Eve", "Can you make a follow-up video?"));
 
         // Display video information
-        video1.DisplayVideoInfo();
-        video2.DisplayVideoInfo();
+            video1.DisplayVideoInfo();
+            video2.DisplayVideoInfo();
+        }
     }
-}
